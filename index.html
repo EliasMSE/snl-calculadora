@@ -58,7 +58,322 @@
   </div>
 
   <main>
-    <!-- Conteúdo omitido por brevidade, já foi confirmado no upload anterior -->
+    <section class="card">
+      <h3>Configuração</h3>
+      <div class="row-3">
+        <div>
+          <label>Mês de apuração</label>
+          <select id="competencia">
+            <option value="2025-01">Jan/2025</option>
+            <option value="2025-02">Fev/2025</option>
+            <option value="2025-03">Mar/2025</option>
+            <option value="2025-04">Abr/2025</option>
+            <option value="2025-05">Mai/2025</option>
+            <option value="2025-06">Jun/2025</option>
+            <option value="2025-07">Jul/2025</option>
+            <option value="2025-08">Ago/2025</option>
+            <option value="2025-09">Set/2025</option>
+            <option value="2025-10">Out/2025</option>
+            <option value="2025-11">Nov/2025</option>
+            <option value="2025-12">Dez/2025</option>
+          </select>
+        </div>
+        <div>
+          <label>Modo do RBT12</label>
+          <select id="modo_rbt12">
+            <option value="auto">Automático (12 meses anteriores à competência)</option>
+            <option value="manual">Manual (digitar soma dos 12 últimos meses)</option>
+          </select>
+        </div>
+        <div class="right">
+          <button class="primary" id="calc">Calcular</button>
+          <button id="download-btn">Baixar este arquivo</button>
+        </div>
+      </div>
+
+      <div class="grid" style="margin-top:10px">
+        <fieldset>
+          <legend>2024 (base do RBT12 para 2025)</legend>
+          <table id="tbl-2024"></table>
+          <div class="row-3" style="margin-top:8px; align-items:center">
+            <div class="sub">Preencha o faturamento bruto de cada mês (Comércio/Serviços). Você pode clicar no preenchimento automático com os dados do print.</div>
+            <div></div>
+            <div class="right"><button id="fill-2024-print">Preencher com dados do print</button></div>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>2025 (mês de apuração e receitas do ano)</legend>
+          <table id="tbl-2025"></table>
+          <div class="sub" style="margin-top:6px">O RBT12 automático considera sempre os 12 meses imediatamente anteriores ao mês selecionado.</div>
+        </fieldset>
+        <fieldset id="fs-manual" style="display:none">
+          <legend>Modo manual</legend>
+          <div class="row-3">
+            <div>
+              <label>RBT12 total</label>
+              <input type="number" step="0.01" id="rbt12_manual" placeholder="0,00" />
+            </div>
+            <div>
+              <label>Receita do mês — Comércio (Anexo I)</label>
+              <input type="number" step="0.01" id="mes_comercio_manual" placeholder="0,00" />
+            </div>
+            <div>
+              <label>Receita do mês — Serviços (Anexo III)</label>
+              <input type="number" step="0.01" id="mes_servico_manual" placeholder="0,00" />
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>Resultados</h3>
+      <div class="kpi">
+        <div class="stat"><div class="name">Competência</div><div class="value" id="competencia_out">—</div></div>
+        <div class="stat"><div class="name">RBT12</div><div class="value" id="rbt12">R$ 0,00</div></div>
+        <div class="stat"><div class="name">Receita do mês total</div><div class="value" id="mes_total">R$ 0,00</div></div>
+      </div>
+
+      <fieldset style="margin-top:12px">
+        <legend>Anexo I — Comércio</legend>
+        <div class="row-2">
+          <div><span class="sub">Faixa</span><div class="pill" id="ax1-faixa">—</div></div>
+          <div><span class="sub">Alíquota nominal</span><div class="pill" id="ax1-aliq">—</div></div>
+        </div>
+        <div class="row-2" style="margin-top:8px">
+          <div><span class="sub">Parcela a deduzir (PD)</span><div class="pill" id="ax1-pd">—</div></div>
+          <div><span class="sub">Alíquota efetiva</span><div class="pill" id="ax1-efetiva">—</div></div>
+        </div>
+        <div style="margin-top:8px">
+          <table>
+            <thead><tr><th>Tributo</th><th class="num">% da repartição</th><th class="num">Valor</th></tr></thead>
+            <tbody id="ax1-trib"></tbody>
+            <tfoot><tr><td class="total">Total DAS — Anexo I</td><td></td><td class="num total" id="ax1-total">R$ 0,00</td></tr></tfoot>
+          </table>
+        </div>
+        <div style="margin-top:10px">
+          <div class="sub">Regra especial acima de R$ 4,8 milhões (ICMS)</div>
+          <div id="ax1-480" class="pill">—</div>
+        </div>
+      </fieldset>
+
+      <fieldset style="margin-top:12px">
+        <legend>Anexo III — Serviços</legend>
+        <div class="row-2">
+          <div><span class="sub">Faixa</span><div class="pill" id="ax3-faixa">—</div></div>
+          <div><span class="sub">Alíquota nominal</span><div class="pill" id="ax3-aliq">—</div></div>
+        </div>
+        <div class="row-2" style="margin-top:8px">
+          <div><span class="sub">Parcela a deduzir (PD)</span><div class="pill" id="ax3-pd">—</div></div>
+          <div><span class="sub">Alíquota efetiva</span><div class="pill" id="ax3-efetiva">—</div></div>
+        </div>
+        <div style="margin-top:8px">
+          <table>
+            <thead><tr><th>Tributo</th><th class="num">% da repartição</th><th class="num">Valor</th></tr></thead>
+            <tbody id="ax3-trib"></tbody>
+            <tfoot><tr><td class="total">Total DAS — Anexo III</td><td></td><td class="num total" id="ax3-total">R$ 0,00</td></tr></tfoot>
+          </table>
+        </div>
+        <div style="margin-top:10px">
+          <div class="sub">Observação > R$ 4,8 mi (ISS não segue o ajuste de ICMS)</div>
+          <div id="ax3-480" class="pill">—</div>
+        </div>
+      </fieldset>
+
+      <div style="margin-top:12px">
+        <table><tfoot><tr><td class="total">TOTAL DAS</td><td class="num total" id="das-total">R$ 0,00</td></tr></tfoot></table>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>Tabelas de referência</h3>
+      <div class="grid">
+        <details>
+          <summary>Anexo I — faixas</summary>
+          <table id="tbl-ax1"></table>
+        </details>
+        <details>
+          <summary>Anexo III — faixas</summary>
+          <table id="tbl-ax3"></table>
+        </details>
+        <details>
+          <summary>Repartição por faixa (para conferência)</summary>
+          <div class="grid">
+            <div>
+              <div class="sub">Anexo I: IRPJ, CSLL, COFINS, PIS, CPP, ICMS</div>
+              <table id="tbl-ax1-split"></table>
+            </div>
+            <div>
+              <div class="sub">Anexo III: CPP, ISS, CSLL, PIS, COFINS, IRPJ</div>
+              <table id="tbl-ax3-split"></table>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
   </main>
+
+<script>
+const BRL = v => (isFinite(v) ? v : 0).toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
+const toNum = el => parseFloat((el.value||'').toString().replace(',','.'))||0;
+const id = s=>document.getElementById(s);
+const MESES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+
+const ANEXO_I = [
+  {faixa:1, de:0, ate:180000.00, aliq:0.0400, pd:0},
+  {faixa:2, de:180000.01, ate:360000.00, aliq:0.0730, pd:5940.00},
+  {faixa:3, de:360000.01, ate:720000.00, aliq:0.0950, pd:13860.00},
+  {faixa:4, de:720000.01, ate:1800000.00, aliq:0.1070, pd:22500.00},
+  {faixa:5, de:1800000.01, ate:3600000.00, aliq:0.1430, pd:87300.00},
+  {faixa:6, de:3600000.01, ate:4800000.00, aliq:0.1900, pd:0}
+];
+const ANEXO_III = [
+  {faixa:1, de:0, ate:180000.00, aliq:0.0600, pd:0},
+  {faixa:2, de:180000.01, ate:360000.00, aliq:0.1120, pd:9360.00},
+  {faixa:3, de:360000.01, ate:720000.00, aliq:0.1350, pd:17640.00},
+  {faixa:4, de:720000.01, ate:1800000.00, aliq:0.1600, pd:35640.00},
+  {faixa:5, de:1800000.01, ate:3600000.00, aliq:0.2100, pd:125640.00},
+  {faixa:6, de:3600000.01, ate:4800000.00, aliq:0.3300, pd:648000.00}
+];
+const SPLIT_I = {
+  1:[0.055,0.035,0.1274,0.0276,0.4150,0.3400],
+  2:[0.050,0.030,0.1231,0.0269,0.4200,0.3499],
+  3:[0.050,0.030,0.1224,0.0268,0.4200,0.3508],
+  4:[0.050,0.030,0.1221,0.0268,0.4200,0.3511],
+  5:[0.046,0.028,0.1207,0.0265,0.4200,0.3590],
+  6:[0.035,0.020,0.1000,0.0287,0.4210,0.3953]
+};
+const SPLIT_III = {
+  1:[0.4340,0.3250,0.0300,0.0400,0.1405,0.0278],
+  2:[0.4340,0.3000,0.0300,0.0400,0.1405,0.0355],
+  3:[0.4340,0.3250,0.0300,0.0400,0.1384,0.0296],
+  4:[0.4340,0.3250,0.0300,0.0400,0.1364,0.0296],
+  5:[0.4340,0.3250,0.0300,0.0400,0.1282,0.0278],
+  6:[0.3050,0.1500,0.3500,0.1603,0.0930,0.0300]
+};
+
+function buildMonthTable(year, tableId){
+  const el = id(tableId);
+  el.innerHTML = `<tr><th>Mês</th><th class="num">Comércio (Anexo I)</th><th class="num">Serviços (Anexo III)</th><th class="num">Total</th></tr>` +
+    MESES.map((m,idx)=>{
+      const kC = `y${year}_m${idx}_c`; const kS = `y${year}_m${idx}_s`;
+      return `<tr>
+        <td>${m}/${year}</td>
+        <td class="num"><input type="number" step="0.01" id="${kC}" placeholder="0,00" /></td>
+        <td class="num"><input type="number" step="0.01" id="${kS}" placeholder="0,00" /></td>
+        <td class="num" id="${kC}_tot">R$ 0,00</td>
+      </tr>`
+    }).join('');
+}
+
+buildMonthTable(2024, 'tbl-2024');
+buildMonthTable(2025, 'tbl-2025');
+
+function updateRowTotals(year){
+  MESES.forEach((_,idx)=>{
+    const c = toNum(id(`y${year}_m${idx}_c`));
+    const s = toNum(id(`y${year}_m${idx}_s`));
+    id(`y${year}_m${idx}_c_tot`).textContent = BRL(c+s);
+  });
+}
+
+[...document.querySelectorAll('input[type=number]')].forEach(el=>{
+  el.addEventListener('input', ()=>{
+    const yr = el.id.startsWith('y2024_') ? 2024 : (el.id.startsWith('y2025_') ? 2025 : null);
+    if(yr) updateRowTotals(yr);
+    saveLS();
+  });
+});
+
+const LSKEY='sn_calc_ax1_ax3_rbt12_auto_v2';
+function saveLS(){
+  const d={};
+  [2024,2025].forEach(year=>{
+    MESES.forEach((_,idx)=>{
+      d[`y${year}_m${idx}_c`]= id(`y${year}_m${idx}_c`).value;
+      d[`y${year}_m${idx}_s`]= id(`y${year}_m${idx}_s`).value;
+    });
+  });
+  d.competencia = id('competencia').value;
+  d.modo = id('modo_rbt12').value;
+  d.rbt12_manual = id('rbt12_manual')?.value || '';
+  d.mes_c_manual = id('mes_comercio_manual')?.value || '';
+  d.mes_s_manual = id('mes_servico_manual')?.value || '';
+  localStorage.setItem(LSKEY, JSON.stringify(d));
+}
+function loadLS(){
+  const raw = localStorage.getItem(LSKEY);
+  if(!raw) return;
+  try{
+    const d = JSON.parse(raw);
+    [2024,2025].forEach(year=>{
+      MESES.forEach((_,idx)=>{
+        id(`y${year}_m${idx}_c`).value = d[`y${year}_m${idx}_c`] ?? '';
+        id(`y${year}_m${idx}_s`).value = d[`y${year}_m${idx}_s`] ?? '';
+      });
+      updateRowTotals(year);
+    });
+    if(d.competencia) id('competencia').value = d.competencia;
+    if(d.modo) id('modo_rbt12').value = d.modo;
+    id('rbt12_manual').value = d.rbt12_manual ?? '';
+    id('mes_comercio_manual').value = d.mes_c_manual ?? '';
+    id('mes_servico_manual').value  = d.mes_s_manual ?? '';
+    toggleManual();
+  }catch(e){}
+}
+
+id('fill-2024-print').addEventListener('click', ()=>{
+  const setVal=(monthIdx, total)=>{ id(`y2024_m${monthIdx}_c`).value = String(total); id(`y2024_m${monthIdx}_s`).value = ''; };
+  [0,1,2,3,4,5,6,7,8,9,10,11].forEach(i=>{ id(`y2024_m${i}_c`).value=''; id(`y2024_m${i}_s`).value=''; });
+  setVal(6, 1100000.00);   // Jul
+  setVal(7, 354993.56);    // Ago
+  setVal(8, 231948.69);    // Set
+  setVal(11, 878711.70);   // Dez
+  updateRowTotals(2024);
+  saveLS();
+});
+
+function toggleManual(){ id('fs-manual').style.display = (id('modo_rbt12').value === 'manual') ? '' : 'none'; }
+id('modo_rbt12').addEventListener('change', ()=>{ toggleManual(); saveLS(); });
+id('competencia').addEventListener('change', saveLS);
+
+function faixaFor(rbt12, tabela){ return tabela.find(f=> rbt12>=f.de && rbt12<=f.ate) || tabela[tabela.length-1]; }
+function aliqEfetiva(rbt12, aliqNom, pd){ if(rbt12<=0) return 0; return ((rbt12*aliqNom - pd)/rbt12); }
+function calculaAnexo({rbt12, receitaMes, tabela, splitMap, nomes}){
+  const fx = faixaFor(rbt12, tabela); const efetiva = aliqEfetiva(rbt12, fx.aliq, fx.pd); const base = receitaMes * efetiva;
+  const split = splitMap[fx.faixa]; const valores = {}; let soma = 0;
+  split.forEach((p,idx)=>{ const v = base * p; valores[nomes[idx]] = {perc:p, valor:v}; soma += v; });
+  return {fx, efetiva, valores, total:soma};
+}
+function regra480ICMS(rbt12, ax1){ if(rbt12 <= 4800000) return {texto:'RBT12 ≤ R$ 4,8 mi — sem ajuste especial de ICMS.'}; const percICMS = SPLIT_I[ax1.fx.faixa][5] || 0; const aliqICMS = ax1.efetiva * percICMS; return {texto:`RBT12 > R$ 4,8 mi — destaque ICMS. Alíquota efetiva ICMS (aprox.): ${(aliqICMS*100).toFixed(2).replace('.',',')}%`}; }
+
+function getAutoRBT12AndMonthRevenues(){
+  const comp = id('competencia').value; const [yStr,mStr]=comp.split('-'); const Y=parseInt(yStr), M=parseInt(mStr);
+  let rbt12 = 0; let months=[]; for(let i=1;i<=12;i++){ let y = Y, m = M - i; if(m<=0){ y = Y-1; m = 12 + m; } months.push({y, m}); }
+  months.forEach(({y,m})=>{ const idx = m-1; const c = toNum(id(`y${y}_m${idx}_c`)); const s = toNum(id(`y${y}_m${idx}_s`)); rbt12 += (c+s); });
+  const mesIdx = M-1; const mesC = toNum(id(`y${Y}_m${mesIdx}_c`)); const mesS = toNum(id(`y${Y}_m${mesIdx}_s`));
+  return {rbt12, mesC, mesS, competenciaOut: `${MESES[mesIdx]}/${Y}`};
+}
+
+function render({rbt12, mesC, mesS, competenciaOut}){
+  id('competencia_out').textContent = competenciaOut; id('rbt12').textContent = BRL(rbt12); id('mes_total').textContent = BRL(mesC+mesS);
+  const ax1 = calculaAnexo({ rbt12, receitaMes:mesC, tabela:ANEXO_I, splitMap:SPLIT_I, nomes:['IRPJ','CSLL','COFINS','PIS','CPP','ICMS'] });
+  id('ax1-faixa').textContent = `Faixa ${ax1.fx.faixa}`; id('ax1-aliq').textContent  = (ax1.fx.aliq*100).toFixed(2).replace('.',',')+'%'; id('ax1-pd').textContent = BRL(ax1.fx.pd); id('ax1-efetiva').textContent = (ax1.efetiva*100).toFixed(2).replace('.',',')+'%'; fillTribTable('ax1-trib', ax1.valores); id('ax1-total').textContent = BRL(ax1.total); id('ax1-480').textContent = regra480ICMS(rbt12, ax1).texto;
+  const ax3 = calculaAnexo({ rbt12, receitaMes:mesS, tabela:ANEXO_III, splitMap:SPLIT_III, nomes:['CPP','ISS','CSLL','PIS','COFINS','IRPJ'] });
+  id('ax3-faixa').textContent = `Faixa ${ax3.fx.faixa}`; id('ax3-aliq').textContent  = (ax3.fx.aliq*100).toFixed(2).replace('.',',')+'%'; id('ax3-pd').textContent = BRL(ax3.fx.pd); id('ax3-efetiva').textContent = (ax3.efetiva*100).toFixed(2).replace('.',',')+'%'; fillTribTable('ax3-trib', ax3.valores); id('ax3-total').textContent = BRL(ax3.total); id('ax3-480').textContent = (rbt12>4800000)? 'RBT12 > R$ 4,8 mi — observar regras específicas do ISS (sem ajuste de ICMS).' : 'RBT12 ≤ R$ 4,8 mi — sem observações.'; id('das-total').textContent = BRL(ax1.total + ax3.total);
+}
+
+function fillTribTable(tbodyId, valores){ const tbody = id(tbodyId); tbody.innerHTML = ''; Object.entries(valores).forEach(([k, obj])=>{ const tr = document.createElement('tr'); tr.innerHTML = `<td>${k}</td><td class="num">${(obj.perc*100).toFixed(2).replace('.',',')}%</td><td class="num">${BRL(obj.valor)}</td>`; tbody.appendChild(tr); }); }
+
+id('calc').addEventListener('click', ()=>{ let rbt12, mesC, mesS, competenciaOut; if(id('modo_rbt12').value === 'manual'){ rbt12 = parseFloat(id('rbt12_manual').value||'0'); mesC  = parseFloat(id('mes_comercio_manual').value||'0'); mesS  = parseFloat(id('mes_servico_manual').value||'0'); const [y,m] = id('competencia').value.split('-'); competenciaOut = `${MESES[parseInt(m)-1]}/${y}`; } else { ({rbt12, mesC, mesS, competenciaOut} = getAutoRBT12AndMonthRevenues()); } render({rbt12, mesC, mesS, competenciaOut}); });
+
+function buildFaixaTable(tabela, elId){ const el = id(elId); el.innerHTML = '<tr><th>Faixa</th><th>De</th><th>Até</th><th>Alíquota</th><th>PD</th></tr>' + tabela.map(f=> `<tr><td>${f.faixa}</td><td class="num">${BRL(f.de)}</td><td class="num">${BRL(f.ate)}</td><td class="num">${(f.aliq*100).toFixed(2).replace('.',',')}%</td><td class="num">${BRL(f.pd)}</td></tr>`).join(''); }
+function buildSplitTable(splitMap, headers, elId){ const el = id(elId); const faixas = Object.keys(splitMap).map(n=>parseInt(n)).sort((a,b)=>a-b); el.innerHTML = `<tr><th>Faixa</th>${headers.map(h=>`<th class=\"num\">${h}</th>`).join('')}</tr>` + faixas.map(fx=>{ const arr = splitMap[fx]; return `<tr><td>${fx}</td>${arr.map(p=>`<td class=\"num\">${(p*100).toFixed(2).replace('.',',')}%</td>`).join('')}</tr>`; }).join(''); }
+buildFaixaTable(ANEXO_I, 'tbl-ax1'); buildFaixaTable(ANEXO_III, 'tbl-ax3'); buildSplitTable(SPLIT_I, ['IRPJ','CSLL','COFINS','PIS','CPP','ICMS'], 'tbl-ax1-split'); buildSplitTable(SPLIT_III, ['CPP','ISS','CSLL','PIS','COFINS','IRPJ'], 'tbl-ax3-split');
+
+loadLS(); updateRowTotals(2024); updateRowTotals(2025); render({rbt12:0, mesC:0, mesS:0, competenciaOut: '—'});
+
+id('download-btn').addEventListener('click', ()=>{ const html = document.documentElement.outerHTML; const blob = new Blob([html], {type:'text/html;charset=utf-8'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'simples_nacional_rbt12_automatico_v2.html'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=> URL.revokeObjectURL(url), 2000); });
+</script>
 </body>
 </html>
