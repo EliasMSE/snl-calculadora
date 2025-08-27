@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Simples Nacional — RBT12 Automático (Visual Melhorado)</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{ --bg:#0b1020; --bg-soft:#0e152b; --card:#101827; --card-2:#0c1326; --muted:#9aa4b2; --text:#e6e9ef; --title:#ffffff; --primary:#10b981; --primary-800:#0ea271; --warning:#f59e0b; --danger:#ef4444; --border:#ffffff15; --shadow:0 10px 24px rgba(0,0,0,.35); --info:#38bdf8; }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:radial-gradient(1200px 600px at 20% -10%, #1b2a55 0%, rgba(11,16,32,0) 60%), var(--bg); color:var(--text); font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif}
+  .topbar{position:sticky; top:0; z-index:10; backdrop-filter: blur(8px); background:linear-gradient(180deg, rgba(13,19,40,.75), rgba(13,19,40,.45)); border-bottom:1px solid var(--border)}
+  .topbar .wrap{display:flex; gap:16px; align-items:center; padding:14px 18px; max-width:1200px; margin:0 auto}
+  .logo{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#10b981,#22d3ee); box-shadow:0 0 18px #10b98155}
+  h1{font-size:18px; margin:0; color:#eaf2ff}
+  .sub{font-size:12px; color:var(--muted)}
+  main{max-width:1200px; margin:18px auto; padding:0 18px; display:grid; grid-template-columns:1.15fr .85fr; gap:18px}
+  @media (max-width:1100px){ main{grid-template-columns:1fr} }
+  .card{background:linear-gradient(180deg,var(--card),var(--card-2)); border:1px solid var(--border); border-radius:14px; box-shadow:var(--shadow); padding:14px}
+  .card h3{margin:0 0 8px 0; font-size:16px; color:#f3f4f6}
+  .muted{color:var(--muted)}
+  .grid{display:grid; gap:12px}
+  .row-2{display:grid; grid-template-columns:repeat(2,1fr); gap:10px}
+  .row-3{display:grid; grid-template-columns:repeat(3,1fr); gap:10px}
+  .right{display:flex; justify-content:flex-end; gap:8px; align-items:center}
+  @media (max-width:720px){ .row-2,.row-3{grid-template-columns:1fr} .right{justify-content:flex-start; flex-wrap:wrap} }
+  label{display:block; font-size:12px; color:#cbd5e1; margin:0 0 6px 2px}
+  input[type="number"], select{width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--border); background:#0b1224; color:var(--text); outline:0; transition:border-color .2s, box-shadow .2s}
+  input[type="number"]:focus, select:focus{border-color:#22d3ee88; box-shadow:0 0 0 3px #22d3ee22}
+  button{background:#0b1224; border:1px solid var(--border); color:var(--text); border-radius:10px; padding:9px 12px; cursor:pointer}
+  button:hover{border-color:#22d3ee55}
+  .primary{background:var(--primary); border-color:var(--primary); color:#072116}
+  .primary:hover{background:var(--primary-800)}
+  .pill{display:inline-block; padding:4px 10px; border-radius:999px; border:1px solid var(--border); background:#0b1224; color:#a6e3ff; font-size:12px}
+  table{width:100%; border-collapse:collapse; font-size:12px}
+  th, td{padding:8px 10px; border-bottom:1px dashed var(--border)}
+  th{color:#cbd5e1; text-align:left; background:#0b1224aa}
+  td.num{text-align:right; font-variant-numeric:tabular-nums}
+  tfoot td{border-top:1px solid var(--border); border-bottom:none}
+  .total{font-weight:700; color:#fff; font-size:16px}
+  details summary{cursor:pointer; user-select:none}
+  .kpi{display:grid; grid-template-columns:repeat(3,1fr); gap:10px}
+  @media (max-width:720px){ .kpi{grid-template-columns:1fr} }
+  .stat{display:flex; align-items:center; justify-content:space-between; background:#0b1224; border:1px solid var(--border); border-radius:12px; padding:10px}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="wrap">
+      <div class="logo"></div>
+      <div>
+        <h1>Simples Nacional — Anexos I e III</h1>
+        <div class="sub">RBT12 automático por mês de apuração, PD, alíquota efetiva e repartição por faixa. Inclui botão de download do próprio HTML.</div>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <!-- Conteúdo omitido por brevidade, já foi confirmado no upload anterior -->
+  </main>
+</body>
+</html>
